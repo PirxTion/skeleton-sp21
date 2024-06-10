@@ -28,7 +28,7 @@ public class ArrayDeque<T> {
     }
 
     public T removeFirst() {
-        if(isEmpty()) return null;
+        if (isEmpty()) return null;
         //resize
         head = (head + 9) % items.length;
         T item = items[head];
@@ -56,7 +56,9 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-        return items[0];
+        if (index >= size) return null;
+        index = (head + index + 1) % 8;
+        return items[index];
     }
 
     public void printDeque() {
