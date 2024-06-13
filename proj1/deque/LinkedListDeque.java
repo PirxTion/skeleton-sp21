@@ -1,8 +1,8 @@
 package deque;
 
-import java.rmi.server.UnicastRemoteObject;
+import java.util.Iterator;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
 
     private int size;
 
@@ -15,6 +15,30 @@ public class LinkedListDeque<T> {
         this.sentinel.next = this.sentinel;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListDequeIterator();
+    }
+
+    private class LinkedListDequeIterator implements Iterator<T> {
+        private Node n;
+
+        public LinkedListDequeIterator() {
+            n = sentinel.next;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return n.next != sentinel;
+        }
+
+        @Override
+        public T next() {
+            T item = n.item;
+            n = n.next;
+            return item;
+        }
+    }
 
     public class Node {
         Node prev;
@@ -48,10 +72,6 @@ public class LinkedListDeque<T> {
         size++;
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
     public int size() {
         return size;
     }
@@ -69,7 +89,9 @@ public class LinkedListDeque<T> {
         Node n = sentinel.next;
         n.next.prev = sentinel;
         sentinel.next = n.next;
-        if (!isEmpty()) size--;
+        if (!isEmpty()) {
+            size--;
+        }
         return n.item;
     }
 
@@ -77,25 +99,31 @@ public class LinkedListDeque<T> {
         Node n = sentinel.prev;
         n.prev.next = sentinel;
         sentinel.prev = n.prev;
-        if (!isEmpty()) size--;
+        if (!isEmpty()) {
+            size--;
+        }
         return n.item;
     }
 
     public T get(int index) {
-        if (index >= size) return null;
+        if (index >= size) {
+            return null;
+        }
         Node n = sentinel.next;
-        for (int i = 0; i < index; i++){
+        for (int i = 0; i < index; i++) {
             n = n.next;
         }
         return n.item;
     }
 
     public T getRecursive(int index) {
-        if(index >= size) return null;
+        if (index >= size) {
+            return null;
+        }
         return recersive(index, sentinel.next);
     }
 
-    private T recersive(int index, Node n){
+    private T recersive(int index, Node n) {
         if (index == 0) {
             return n.item;
         } else {
@@ -103,4 +131,29 @@ public class LinkedListDeque<T> {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof LinkedListDeque)) {
+            return false;
+        }
+        LinkedListDeque<T> q = (LinkedListDeque<T>) o;
+        if (q.size != this.size) {
+            return false;
+        }
+         Iterator<T> qIterator = q.iterator();
+         Iterator<T> iterator = this.iterator();
+
+         while (qIterator.hasNext() && iterator.hasNext()){
+             if (!qIterator.next().equals(iterator.next())) {
+                 return false;
+             }
+         }
+         return true;
+    }
 }

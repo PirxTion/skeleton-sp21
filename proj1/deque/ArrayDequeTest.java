@@ -84,4 +84,71 @@ public class ArrayDequeTest {
 
         assertEquals(4, (double) ad1.get(4), 0.0);
     }
+
+    @Test
+    public void resizeTest() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+
+        for (int i = 0; i < 7; i++){
+            ad1.addLast(i);
+        }
+
+        ad1.addFirst(2);
+
+        for (int i = 0; i < 16; i++){
+            ad1.addFirst(i);
+        }
+
+        for (int i = 0; i < 24; i++){
+            ad1.removeFirst();
+        }
+
+        ad1.removeFirst();
+
+        for (int i = 0; i < 9; i++){
+            ad1.addLast(i);
+        }
+        ad1.addFirst(1);
+        ad1.addFirst(2);
+
+        for (int i = 0; i < 8; i++){
+            ad1.removeLast();
+        }
+
+    }
+
+
+    @Test
+    public void iterationTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+
+        for (int i = 0; i < 100; i++) {
+            lld1.addLast(i);
+        }
+
+        int j = 0;
+        for (int i : lld1) {
+            assertEquals(j, i, 0.0);
+            j++;
+        }
+    }
+
+    @Test
+    public void equalsTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
+        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
+        ArrayDeque<Integer> lld3 = new ArrayDeque<>();
+
+
+        for (int i = 0; i < 100; i++) {
+            lld1.addLast(i);
+            lld2.addLast(i);
+            lld3.addFirst(i);
+        }
+
+        assertNotEquals(lld1, lld3);
+        assertEquals(lld1, lld2);
+    }
+
+
 }
