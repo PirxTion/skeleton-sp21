@@ -2,11 +2,12 @@ package deque;
 
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
+public class ArrayDeque<T> implements Deque<T> {
     private T[] items;
     private int size;
     private int head;
     private int tail;
+    private static final int DECAY = 16;
 
     public ArrayDeque() {
         items = (T[]) new Object[8];
@@ -58,7 +59,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
     }
 
     private void ifShrink() {
-        if (items.length >= 16 && ((double) items.length / size) >= 4) {
+        if (items.length >= DECAY && ((double) items.length / size) >= 4) {
             resize(size + 2);
         }
     }
@@ -113,6 +114,9 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
         @Override
         public T next() {
+            if (!hasNext()) {
+                return null;
+            }
             T item = items[i];
             i = (i + 1) % items.length;
             count++;
@@ -133,11 +137,11 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof ArrayDeque)) {
+        if (!(o instanceof Deque)) {
             return false;
         }
-        ArrayDeque<T> q = (ArrayDeque<T>) o;
-        if (q.size != this.size) {
+        Deque<T> q = (Deque<T>) o;
+        if (q.size() != this.size) {
             return false;
         }
         Iterator<T> qIterator = q.iterator();
