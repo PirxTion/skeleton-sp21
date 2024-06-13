@@ -140,7 +140,7 @@ public class ArrayDeque<T> implements Deque<T> {
         if (!(o instanceof Deque)) {
             return false;
         }
-        Deque<T> q = (Deque<T>) o;
+        Deque<T> q = (Deque) o;
         if (q.size() != this.size) {
             return false;
         }

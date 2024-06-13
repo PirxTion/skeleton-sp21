@@ -150,5 +150,4 @@ public class ArrayDequeTest {
         assertEquals(lld1, lld2);
     }
 
-
 }

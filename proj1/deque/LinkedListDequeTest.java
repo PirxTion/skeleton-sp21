@@ -155,9 +155,9 @@ public class LinkedListDequeTest {
 
     @Test
     public void equalsTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
-        ArrayDeque<Integer> lld2 = new ArrayDeque<>();
-        LinkedListDeque<Integer> lld3 = new LinkedListDeque<>();
+        Deque<Integer> lld1 = new LinkedListDeque<>();
+        Deque<Integer> lld2 = new ArrayDeque<>();
+        Deque<Integer> lld3 = new LinkedListDeque<>();
 
 
         for (int i = 0; i < 100; i++) {
