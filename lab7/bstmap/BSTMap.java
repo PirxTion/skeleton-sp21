@@ -2,9 +2,9 @@ package bstmap;
 
 import java.util.*;
 
-public class BSTMap<K extends Comparable, V> implements Map61B {
+public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
-    public class BSTNode<K extends Comparable, V> {
+    private class BSTNode<K extends Comparable<K>, V> {
         public K key;
         public V value;
         public BSTNode<K, V> left;
@@ -18,7 +18,7 @@ public class BSTMap<K extends Comparable, V> implements Map61B {
         }
     }
 
-    public class BSTMapIterator implements Iterator<K> {
+    private class BSTMapIterator implements Iterator<K> {
 
         private List<K> bstMapList;
 
@@ -56,13 +56,13 @@ public class BSTMap<K extends Comparable, V> implements Map61B {
     }
 
     @Override
-    public boolean containsKey(Object key) {
-        return find(root, (K) key) != null;
+    public boolean containsKey(K key) {
+        return find(root,  key) != null;
     }
 
     @Override
-    public Object get(Object key) {
-        BSTNode<K, V> result = find(root, (K) key);
+    public V get(K key) {
+        BSTNode<K, V> result = find(root, key);
         if (result == null) {
             return null;
         } else {
@@ -70,7 +70,7 @@ public class BSTMap<K extends Comparable, V> implements Map61B {
         }
     }
 
-    public BSTNode<K, V> find(BSTNode<K, V> node, K key) {
+    private BSTNode<K, V> find(BSTNode<K, V> node, K key) {
         if (node == null) {
             return null;
         } else {
@@ -90,12 +90,12 @@ public class BSTMap<K extends Comparable, V> implements Map61B {
     }
 
     @Override
-    public void put(Object key, Object value) {
-        root = putHelper((K) key, (V) value, root);
+    public void put(K key, V value) {
+        root = putHelper( key, value, root);
         size++;
     }
 
-    public BSTNode<K, V> putHelper(K key, V value, BSTNode<K, V> node) {
+    private BSTNode<K, V> putHelper(K key, V value, BSTNode<K, V> node) {
         if (node == null) {
             return new BSTNode<>(key, value);
         } else {
@@ -113,23 +113,30 @@ public class BSTMap<K extends Comparable, V> implements Map61B {
 
     @Override
     public Set keySet() {
-        Set result = new HashSet();
-        result.addAll(new BSTMapIterator().bstMapList);
-        return result;
+        return new HashSet(new BSTMapIterator().bstMapList);
     }
 
     @Override
-    public Object remove(Object key) {
+    public V remove(K key) {
         if (!containsKey(key)) {
             return null;
         } else {
-            V value = find(root, (K) key).value;
-            root = removeHelper((K) key, root);
+            V value = find(root, key).value;
+            root = removeHelper(key, root);
             size--;
             return value;
         }
     }
 
+    @Override
+    public V remove(K key, V value) {
+        BSTNode<K, V> node = find(root, key);
+        if (node == null || !node.value.equals(value)) {
+            return null;
+        } else {
+            return remove(key);
+        }
+    }
 
     private BSTNode<K, V> findBiggestInLeft(BSTNode<K, V> node) {
         if (node.right == null) {
@@ -198,20 +205,14 @@ public class BSTMap<K extends Comparable, V> implements Map61B {
         }
     }
 
-
-    @Override
-    public Object remove(Object key, Object value) {
-        BSTNode<K, V> node = find(root, (K) key);
-        if (node == null || !node.value.equals(value)) {
-            return null;
-        } else {
-            return remove(key);
-        }
-    }
-
     @Override
     public Iterator iterator() {
         return new BSTMapIterator();
+    }
+
+    @Override
+    public Spliterator<K> spliterator() {
+        return Map61B.super.spliterator();
     }
 
     public void printInOrder() {
